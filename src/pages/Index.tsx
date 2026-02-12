@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import AnimatedSection from "@/components/AnimatedSection";
+import ThreeDarkBackground from "@/components/ThreeDarkBackground";
 import Counter from "@/components/Counter";
 import { testimonials } from "@/data/testimonials";
 import {
@@ -50,6 +51,28 @@ const stats = [
 const Index = () => {
   const countdown = useCountdown();
   const [testimonialIdx, setTestimonialIdx] = useState(0);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      try {
+        const saved = localStorage.getItem("theme");
+        if (saved) {
+          setIsDarkTheme(saved === "dark");
+        } else {
+          setIsDarkTheme(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        }
+      } catch {
+        setIsDarkTheme(false);
+      }
+    };
+    check();
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "theme") check();
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
 
   useEffect(() => {
     const id = setInterval(() => setTestimonialIdx((i) => (i + 1) % testimonials.length), 5000);
@@ -64,6 +87,7 @@ const Index = () => {
           <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
           <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-electric/5 blur-3xl" />
         </div>
+        {isDarkTheme && <ThreeDarkBackground className="absolute inset-0 z-0" />}
         <AnimatedSection className="relative z-10 max-w-4xl">
           <p className="mb-4 text-sm font-medium tracking-widest uppercase text-muted-foreground">
             A Student Society of the EII Department, RKGIT

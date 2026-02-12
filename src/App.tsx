@@ -12,6 +12,7 @@ import Events from "./pages/Events";
 import Team from "./pages/Team";
 import Contact from "./pages/Contact";
 import JoinTeam from "./pages/JoinTeam";
+import Timeline from "./pages/Timeline";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="/team" element={<Team />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/join" element={<JoinTeam />} />
+              <Route path="/timeline" element={<Timeline />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

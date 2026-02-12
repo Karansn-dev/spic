@@ -4,12 +4,14 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const navLinks = [
   { label: "Home", path: "/" },
   { label: "About", path: "/about" },
   { label: "Events", path: "/events" },
   { label: "Team", path: "/team" },
+  { label: "Timeline", path: "/timeline" },
   { label: "Contact", path: "/contact" },
 ];
 
@@ -48,6 +50,7 @@ const Header = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
+          <ThemeToggle />
           <Button asChild size="sm" variant="outline">
             <Link to="/join">Join Us</Link>
           </Button>
@@ -82,6 +85,9 @@ const Header = () => {
                 </Link>
               ))}
               <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border">
+                <div className="flex items-center justify-between">
+                  <ThemeToggle />
+                </div>
                 <Button asChild variant="outline" onClick={() => setOpen(false)}>
                   <Link to="/join">Join Us</Link>
                 </Button>
