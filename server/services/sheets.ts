@@ -1,0 +1,63 @@
+import { google } from "googleapis";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const KEY_PATH = path.join(__dirname, "..", "firebase-service-account.json");
+
+// Re-use the same Firebase service account for Google Sheets access
+const auth = new google.auth.GoogleAuth({
+  keyFile: KEY_PATH,
+  scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+});
+
+const sheets = google.sheets({ version: "v4", auth });
+
+/**
+ * Append a check-in row to the configured Google Sheet.
+ * Columns: Registration ID | Name | Email | Phone | Roll Number | Year | Event | Event Date | Venue | Attendance Timestamp
+ */
+export async function appendAttendanceRow(data: {
+  participantName: string;
+  participantEmail: string;
+  phone: string | null;
+  rollNumber: string | null;
+  year: string | null;
+  eventName: string;
+  eventDate: string;
+  eventVenue: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+
+  if (!sheetId) {
+    console.warn("[sheets] GOOGLE_SHEET_ID not set — skipping attendance log.");
+    return { success: false, error: "GOOGLE_SHEET_ID not configured." };
+  }
+
+  try {
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: sheetId,
+        range: "Sheet1!A:G",
+      valueInputOption: "USER_ENTERED",
+      requestBody: {
+        values: [
+          [
+            data.participantName,
+            data.participantEmail,
+            data.phone ?? "",
+            data.rollNumber ?? "",
+            data.year ?? "",
+            data.eventName,
+            data.eventDate,
+              // Removed eventVenue and timestamp as per requirement
+          ],
+        ],
+      },
+    });
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("[sheets] Failed to append row:", err.message);
+    return { success: false, error: err.message };
+  }
+}

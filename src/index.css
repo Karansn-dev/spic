@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,41 +6,35 @@
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 222 47% 11%;
+    --background: 0 0% 99%;
+    --foreground: 224 20% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 224 20% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 224 20% 14%;
 
-    --primary: 230 70% 42%;
+    --primary: 224 55% 44%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 20% 94%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 220 16% 95%;
+    --secondary-foreground: 224 20% 14%;
 
-    --muted: 220 15% 92%;
-    --muted-foreground: 220 10% 46%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 24 95% 53%;
+    --accent: 24 80% 50%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 230 70% 42%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 224 55% 44%;
 
-    --radius: 0.75rem;
-
-    --electric: 210 100% 56%;
-    --electric-foreground: 0 0% 100%;
-
-    --indigo: 235 60% 52%;
-    --indigo-foreground: 0 0% 100%;
+    --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -53,25 +47,25 @@
   }
 
   .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 8%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 230 70% 55%;
+    --background: 224 20% 7%;
+    --foreground: 210 30% 96%;
+    --card: 224 20% 10%;
+    --card-foreground: 210 30% 96%;
+    --popover: 224 20% 10%;
+    --popover-foreground: 210 30% 96%;
+    --primary: 224 55% 55%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 24 95% 53%;
+    --secondary: 220 20% 16%;
+    --secondary-foreground: 210 30% 96%;
+    --muted: 220 15% 15%;
+    --muted-foreground: 215 15% 60%;
+    --accent: 24 80% 50%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 230 70% 55%;
+    --destructive-foreground: 210 30% 96%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 224 55% 55%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -88,24 +82,40 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    letter-spacing: -0.011em;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  h1 {
+    @apply text-4xl sm:text-5xl font-bold;
+  }
+  h2 {
+    @apply text-2xl sm:text-3xl font-bold;
+  }
+  h3 {
+    @apply text-lg sm:text-xl font-semibold;
+  }
+  p {
+    line-height: 1.7;
   }
 }
 
 @layer utilities {
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--electric)));
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(224 55% 58%));
   }
-  .bg-gradient-hero {
-    background: linear-gradient(135deg, hsl(230 70% 42% / 0.05), hsl(210 100% 56% / 0.08), hsl(24 95% 53% / 0.05));
+  .section-padding {
+    @apply py-20 sm:py-28;
   }
-  .bg-gradient-cta {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--indigo)));
+  .section-padding-sm {
+    @apply py-14 sm:py-20;
   }
 }
 

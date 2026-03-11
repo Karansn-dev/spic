@@ -53,24 +53,24 @@ const JoinTeam = () => {
 
   return (
     <main>
-      <section className="py-20 sm:py-28 bg-gradient-hero text-center px-4">
-        <AnimatedSection className="max-w-3xl mx-auto">
+      <section className="section-padding text-center px-4">
+        <AnimatedSection className="max-w-2xl mx-auto">
           <h1 className="font-display text-4xl sm:text-5xl font-bold mb-4">
             Join the <span className="text-gradient">SPIC Family</span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+          <p className="text-base text-muted-foreground max-w-lg mx-auto">
             Are you passionate about innovation, creativity, and building something impactful? We're looking for driven students to join our team.
           </p>
         </AnimatedSection>
       </section>
 
       {/* Benefits */}
-      <section className="py-12 border-b border-border">
+      <section className="py-8 border-y border-border/40">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-6">
             {benefits.map((b, i) => (
-              <AnimatedSection key={b.text} delay={i * 0.08} className="flex items-center gap-2 text-sm">
-                <b.icon className="h-4 w-4 text-primary" />
+              <AnimatedSection key={b.text} delay={i * 0.06} className="flex items-center gap-2 text-sm">
+                <b.icon className="h-3.5 w-3.5 text-primary" />
                 <span>{b.text}</span>
               </AnimatedSection>
             ))}
@@ -79,23 +79,23 @@ const JoinTeam = () => {
       </section>
 
       {/* Departments */}
-      <section className="py-16">
+      <section className="section-padding-sm">
         <div className="container mx-auto px-4">
-          <AnimatedSection className="text-center mb-10">
-            <h2 className="font-display text-2xl sm:text-3xl font-bold mb-2">Open Positions</h2>
+          <AnimatedSection className="text-center mb-8">
+            <h2 className="font-display text-xl sm:text-2xl font-bold mb-1.5">Open Positions</h2>
             <p className="text-muted-foreground text-sm">Choose the department that excites you</p>
           </AnimatedSection>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-3xl mx-auto">
             {departments.map((d, i) => (
-              <AnimatedSection key={d.name} delay={i * 0.06}>
-                <Card className="h-full hover:shadow-md transition-shadow">
-                  <CardContent className="p-5 flex gap-3">
-                    <div className="h-9 w-9 shrink-0 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <d.icon className="h-4 w-4 text-primary" />
+              <AnimatedSection key={d.name} delay={i * 0.05}>
+                <Card className="h-full hover:shadow-md">
+                  <CardContent className="p-4 flex gap-3">
+                    <div className="h-8 w-8 shrink-0 rounded-md bg-primary/8 flex items-center justify-center">
+                      <d.icon className="h-3.5 w-3.5 text-primary" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-sm">{d.name}</h3>
-                      <p className="text-xs text-muted-foreground">{d.desc}</p>
+                      <p className="text-[11px] text-muted-foreground">{d.desc}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -106,7 +106,7 @@ const JoinTeam = () => {
       </section>
 
       {/* Application Form */}
-      <section className="py-16 bg-card border-t border-border">
+      <section className="section-padding-sm bg-muted/30 border-t border-border/40">
         <div className="container mx-auto px-4">
           <AnimatedSection className="max-w-xl mx-auto">
             {submitted ? (
@@ -120,7 +120,7 @@ const JoinTeam = () => {
             ) : (
               <Card>
                 <CardContent className="p-6 sm:p-8">
-                  <h2 className="font-display text-xl font-bold mb-6">Apply Now</h2>
+                  <h2 className="font-display text-lg font-bold mb-6">Apply Now</h2>
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                       <div className="grid sm:grid-cols-2 gap-4">

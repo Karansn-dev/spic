@@ -74,27 +74,27 @@ export default function TimelineFlashcards() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-background via-card to-background py-12 px-4">
+    <div className="w-full min-h-screen bg-background section-padding">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="font-display text-4xl sm:text-5xl font-bold mb-3">
+        <div className="text-center mb-10">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold mb-2">
             SPIC Journey
           </h2>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground">
             Explore our milestones and achievements
           </p>
         </div>
 
         {/* Progress bar */}
         <div className="mb-8">
-          <div className="h-2 bg-secondary rounded-full overflow-hidden">
+          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-cta transition-all duration-300"
+              className="h-full bg-primary rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-center text-sm text-muted-foreground mt-2">
+          <p className="text-center text-xs text-muted-foreground mt-2">
             {currentIndex + 1} / {timelineData.length}
           </p>
         </div>
@@ -115,12 +115,12 @@ export default function TimelineFlashcards() {
           >
             {/* Front */}
             <Card
-              className={`absolute w-full h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br from-primary/10 via-card to-secondary/10 border-2 border-primary/30 hover:border-primary/50 transition-all duration-300 cursor-pointer group ${
+              className={`absolute w-full h-full flex flex-col items-center justify-center p-8 border border-border/60 hover:border-border transition-all duration-200 cursor-pointer ${
                 isFlipped ? "opacity-0 pointer-events-none" : "opacity-100"
               }`}
             >
               <div className="text-center">
-                <div className="text-6xl sm:text-7xl font-display font-bold text-gradient mb-4">
+                <div className="text-5xl sm:text-6xl font-display font-bold text-primary mb-3">
                   {current.yearDisplay}
                 </div>
                 <p className="text-muted-foreground text-sm">
@@ -131,7 +131,7 @@ export default function TimelineFlashcards() {
 
             {/* Back */}
             <Card
-              className={`absolute w-full h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br from-accent/10 via-card to-primary/10 border-2 border-accent/30 hover:border-accent/50 transition-all duration-300 overflow-y-auto ${
+              className={`absolute w-full h-full flex flex-col items-center justify-center p-8 border border-border/60 overflow-y-auto transition-all duration-200 ${
                 isFlipped ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
               style={{
@@ -139,16 +139,16 @@ export default function TimelineFlashcards() {
               }}
             >
               <div className="w-full">
-                <h3 className="font-display text-2xl font-bold text-center mb-6 text-primary">
+                <h3 className="font-display text-xl font-semibold text-center mb-5 text-foreground">
                   {current.yearDisplay}
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   {current.events.map((event, idx) => (
                     <div
                       key={idx}
-                      className="flex items-start gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20 hover:border-primary/40 transition-colors"
+                      className="flex items-start gap-3 p-2.5 rounded-md bg-muted/50 transition-colors"
                     >
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-medium">
                         {idx + 1}
                       </div>
                       <p className="text-sm text-foreground leading-relaxed">
@@ -197,7 +197,7 @@ export default function TimelineFlashcards() {
         </div>
 
         {/* Quick navigation dots */}
-        <div className="flex justify-center gap-2 mt-8">
+        <div className="flex justify-center gap-1.5 mt-8">
           {timelineData.map((_, idx) => (
             <button
               key={idx}
@@ -205,10 +205,10 @@ export default function TimelineFlashcards() {
                 setCurrentIndex(idx);
                 setIsFlipped(false);
               }}
-              className={`h-3 w-3 rounded-full transition-all duration-300 ${
+              className={`h-2 rounded-full transition-all duration-200 ${
                 idx === currentIndex
-                  ? "bg-primary w-8"
-                  : "bg-border hover:bg-muted-foreground"
+                  ? "bg-primary w-6"
+                  : "w-2 bg-border hover:bg-muted-foreground"
               }`}
               aria-label={`Go to year ${timelineData[idx].yearDisplay}`}
             />

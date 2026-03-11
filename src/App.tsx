@@ -13,6 +13,8 @@ import Team from "./pages/Team";
 import Contact from "./pages/Contact";
 import JoinTeam from "./pages/JoinTeam";
 import Timeline from "./pages/Timeline";
+import Dashboard from "./pages/Dashboard";
+import Scanner from "./pages/Scanner";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +36,8 @@ const App = () => (
               <Route path="/contact" element={<Contact />} />
               <Route path="/join" element={<JoinTeam />} />
               <Route path="/timeline" element={<Timeline />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/scan" element={<Scanner />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import AnimatedSection from "@/components/AnimatedSection";
-import ThreeDarkBackground from "@/components/ThreeDarkBackground";
 import Counter from "@/components/Counter";
 import { testimonials } from "@/data/testimonials";
 import {
@@ -51,28 +50,6 @@ const stats = [
 const Index = () => {
   const countdown = useCountdown();
   const [testimonialIdx, setTestimonialIdx] = useState(0);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
-
-  useEffect(() => {
-    const check = () => {
-      try {
-        const saved = localStorage.getItem("theme");
-        if (saved) {
-          setIsDarkTheme(saved === "dark");
-        } else {
-          setIsDarkTheme(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
-        }
-      } catch {
-        setIsDarkTheme(false);
-      }
-    };
-    check();
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === "theme") check();
-    };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
 
   useEffect(() => {
     const id = setInterval(() => setTestimonialIdx((i) => (i + 1) % testimonials.length), 5000);
@@ -82,21 +59,20 @@ const Index = () => {
   return (
     <main>
       {/* Hero */}
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center bg-gradient-hero px-4 text-center overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
-          <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-electric/5 blur-3xl" />
+      <section className="relative min-h-[85vh] flex flex-col items-center justify-center px-4 text-center overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/[0.03] blur-[100px]" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-accent/[0.03] blur-[100px]" />
         </div>
-        {isDarkTheme && <ThreeDarkBackground className="absolute inset-0 z-0" />}
-        <AnimatedSection className="relative z-10 max-w-4xl">
-          <p className="mb-4 text-sm font-medium tracking-widest uppercase text-muted-foreground">
+        <AnimatedSection className="max-w-3xl">
+          <p className="mb-5 text-sm font-medium tracking-widest uppercase text-muted-foreground">
             A Student Society of the EII Department, RKGIT
           </p>
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-4">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight mb-5">
             Society of Promotion of{" "}
             <span className="text-gradient">Innovation & Creativity</span>
           </h1>
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto mb-10">
             Where Ideas Spark and Futures Start
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
@@ -108,40 +84,40 @@ const Index = () => {
             </Button>
           </div>
         </AnimatedSection>
-        <a href="#countdown" className="absolute bottom-8 animate-bounce text-muted-foreground" aria-label="Scroll down">
-          <ChevronDown className="h-6 w-6" />
+        <a href="#countdown" className="absolute bottom-8 text-muted-foreground hover:text-foreground transition-colors" aria-label="Scroll down">
+          <ChevronDown className="h-5 w-5 animate-bounce" />
         </a>
       </section>
 
       {/* Countdown */}
-      <section id="countdown" className="py-16 sm:py-20">
+      <section id="countdown" className="section-padding-sm border-y border-border/40">
         <div className="container mx-auto px-4 text-center">
           <AnimatedSection>
-            <p className="text-sm font-semibold tracking-widest uppercase text-accent mb-2">Next Big Event</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold mb-2">Ideation 2.0</h2>
-            <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm mb-8">
-              <Calendar className="h-4 w-4" /> 11 March 2026
-              <span className="mx-1">•</span>
-              <MapPin className="h-4 w-4" /> CRC
+            <p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">Next Big Event</p>
+            <h2 className="font-display text-2xl sm:text-3xl font-bold mb-2">Ideation 2.0</h2>
+            <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm mb-10">
+              <Calendar className="h-3.5 w-3.5" /> 11 March 2026
+              <span className="mx-1 text-border">&bull;</span>
+              <MapPin className="h-3.5 w-3.5" /> CRC
             </div>
           </AnimatedSection>
           <AnimatedSection delay={0.1}>
-            <div className="flex justify-center gap-3 sm:gap-6 mb-8">
+            <div className="flex justify-center gap-4 sm:gap-8 mb-10">
               {[
                 { val: countdown.days, label: "Days" },
                 { val: countdown.hours, label: "Hours" },
-                { val: countdown.minutes, label: "Minutes" },
-                { val: countdown.seconds, label: "Seconds" },
+                { val: countdown.minutes, label: "Min" },
+                { val: countdown.seconds, label: "Sec" },
               ].map(({ val, label }) => (
-                <div key={label} className="flex flex-col items-center">
-                  <span className="font-display text-4xl sm:text-5xl font-bold tabular-nums text-foreground">
+                <div key={label} className="flex flex-col items-center min-w-[60px]">
+                  <span className="font-display text-3xl sm:text-4xl font-bold tabular-nums text-foreground">
                     {String(val).padStart(2, "0")}
                   </span>
-                  <span className="text-xs text-muted-foreground mt-1">{label}</span>
+                  <span className="text-[11px] text-muted-foreground mt-1.5 uppercase tracking-wide">{label}</span>
                 </div>
               ))}
             </div>
-            <Button asChild size="lg" className="bg-gradient-cta border-0 text-primary-foreground hover:opacity-90">
+            <Button asChild size="lg">
               <Link to="/events">Register Now</Link>
             </Button>
           </AnimatedSection>
@@ -149,16 +125,16 @@ const Index = () => {
       </section>
 
       {/* Stats */}
-      <section className="py-16 bg-card border-y border-border">
+      <section className="section-padding-sm">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {stats.map((s, i) => (
-              <AnimatedSection key={s.label} delay={i * 0.1} className="text-center">
+              <AnimatedSection key={s.label} delay={i * 0.08} className="text-center py-4">
                 <div className="font-display text-3xl sm:text-4xl font-bold text-primary mb-1">
                   <Counter end={s.value} suffix={s.suffix} />
                 </div>
-                <p className="font-medium text-foreground">{s.label}</p>
-                <p className="text-xs text-muted-foreground">{s.sub}</p>
+                <p className="font-medium text-sm text-foreground">{s.label}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{s.sub}</p>
               </AnimatedSection>
             ))}
           </div>
@@ -166,21 +142,21 @@ const Index = () => {
       </section>
 
       {/* Why Join SPIC */}
-      <section className="py-16 sm:py-20">
+      <section className="section-padding border-t border-border/40">
         <div className="container mx-auto px-4">
-          <AnimatedSection className="text-center mb-12">
-            <h2 className="font-display text-3xl sm:text-4xl font-bold mb-3">Why Be Part of SPIC?</h2>
-            <p className="text-muted-foreground max-w-xl mx-auto">Discover the opportunities that await you</p>
+          <AnimatedSection className="text-center mb-14">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold mb-3">Why Be Part of SPIC?</h2>
+            <p className="text-muted-foreground text-sm max-w-lg mx-auto">Discover the opportunities that await you</p>
           </AnimatedSection>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {benefits.map((b, i) => (
-              <AnimatedSection key={b.title} delay={i * 0.08}>
-                <Card className="h-full hover:shadow-md transition-shadow group">
+              <AnimatedSection key={b.title} delay={i * 0.06}>
+                <Card className="h-full group hover:shadow-md">
                   <CardContent className="p-6">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary/8 text-primary mb-4 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200">
                       <b.icon className="h-5 w-5" />
                     </div>
-                    <h3 className="font-display font-semibold text-lg mb-1">{b.title}</h3>
+                    <h3 className="font-display font-semibold text-base mb-1.5">{b.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{b.desc}</p>
                   </CardContent>
                 </Card>
@@ -191,26 +167,26 @@ const Index = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 sm:py-20 bg-card border-y border-border">
+      <section className="section-padding border-t border-border/40 bg-muted/30">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-12">
-            <h2 className="font-display text-3xl sm:text-4xl font-bold mb-3">What Our Members Say</h2>
+            <h2 className="font-display text-2xl sm:text-3xl font-bold mb-3">What Our Members Say</h2>
           </AnimatedSection>
-          <div className="max-w-2xl mx-auto text-center">
-            <Quote className="h-8 w-8 text-primary/30 mx-auto mb-4" />
-            <p className="text-lg leading-relaxed text-foreground mb-6 min-h-[4rem]">
-              "{testimonials[testimonialIdx].quote}"
+          <div className="max-w-xl mx-auto text-center">
+            <Quote className="h-6 w-6 text-primary/20 mx-auto mb-5" />
+            <p className="text-base sm:text-lg leading-relaxed text-foreground mb-6 min-h-[4rem]">
+              &ldquo;{testimonials[testimonialIdx].quote}&rdquo;
             </p>
-            <p className="font-semibold">{testimonials[testimonialIdx].name}</p>
-            <p className="text-sm text-muted-foreground">
-              {testimonials[testimonialIdx].batch} — {testimonials[testimonialIdx].role}
+            <p className="font-semibold text-sm">{testimonials[testimonialIdx].name}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {testimonials[testimonialIdx].batch} &mdash; {testimonials[testimonialIdx].role}
             </p>
-            <div className="flex justify-center gap-2 mt-6">
+            <div className="flex justify-center gap-1.5 mt-8">
               {testimonials.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setTestimonialIdx(i)}
-                  className={`h-2 w-2 rounded-full transition-colors ${i === testimonialIdx ? "bg-primary" : "bg-border"}`}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${i === testimonialIdx ? "bg-primary w-6" : "bg-border w-1.5 hover:bg-muted-foreground"}`}
                   aria-label={`Testimonial ${i + 1}`}
                 />
               ))}
@@ -220,18 +196,21 @@ const Index = () => {
       </section>
 
       {/* Quick CTAs */}
-      <section className="py-16 sm:py-20">
+      <section className="section-padding">
         <div className="container mx-auto px-4 text-center">
           <AnimatedSection>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold mb-8">Ready to Get Started?</h2>
-            <div className="flex flex-wrap gap-4 justify-center">
+            <h2 className="font-display text-2xl sm:text-3xl font-bold mb-4">Ready to Get Started?</h2>
+            <p className="text-muted-foreground text-sm mb-8 max-w-md mx-auto">
+              Join the community of innovators and start building your future today.
+            </p>
+            <div className="flex flex-wrap gap-3 justify-center">
               <Button asChild size="lg">
                 <Link to="/events">Explore Events <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline">
                 <Link to="/join">Join Our Team</Link>
               </Button>
-              <Button asChild size="lg" variant="secondary">
+              <Button asChild size="lg" variant="ghost">
                 <Link to="/contact">Contact Us</Link>
               </Button>
             </div>
