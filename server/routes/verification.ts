@@ -67,7 +67,13 @@ router.post("/", async (req: Request, res: Response) => {
     eventName: row.eventName,
     eventDate: row.eventDate,
     eventVenue: row.eventVenue,
-  }).catch((err) => console.error("[verify] Sheet append failed:", err));
+  })
+    .then((result) => {
+      if (!result.success) {
+        console.error("[verify] Sheet append failed:", result.error);
+      }
+    })
+    .catch((err) => console.error("[verify] Sheet append error:", err));
 
   res.json({
     valid: true,

@@ -4,6 +4,7 @@ import { getDb, REGISTRATIONS } from "../db.js";
 import { generateToken } from "../services/token.js";
 import { generateQrDataUrl } from "../services/qr.js";
 import { sendTicketEmail } from "../services/email.js";
+import { appendRegistrationRow } from "../services/sheets.js";
 
 const router = Router();
 
@@ -69,6 +70,21 @@ router.post("/", async (req: Request, res: Response) => {
   };
 
   await db.collection(REGISTRATIONS).doc(id).set(registration);
+
+  // Save to Google Sheets (non-blocking)
+  appendRegistrationRow({
+    id,
+    participantName: registration.participantName,
+    participantEmail: registration.participantEmail,
+    phone: registration.phone,
+    rollNumber: registration.rollNumber,
+    year: registration.year,
+    branch: registration.branch,
+    eventName: registration.eventName,
+    eventDate: registration.eventDate,
+    eventVenue: registration.eventVenue,
+    createdAt: registration.createdAt,
+  });
 
   // Send email (non-blocking)
   sendTicketEmail({

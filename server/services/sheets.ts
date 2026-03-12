@@ -37,7 +37,7 @@ export async function appendAttendanceRow(data: {
   try {
     await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
-        range: "Sheet1!A:G",
+      range: "Sheet1!A:G",
       valueInputOption: "USER_ENTERED",
       requestBody: {
         values: [
@@ -49,7 +49,7 @@ export async function appendAttendanceRow(data: {
             data.year ?? "",
             data.eventName,
             data.eventDate,
-              // Removed eventVenue and timestamp as per requirement
+            // Removed eventVenue and timestamp as per requirement
           ],
         ],
       },
@@ -58,6 +58,54 @@ export async function appendAttendanceRow(data: {
     return { success: true };
   } catch (err: any) {
     console.error("[sheets] Failed to append row:", err.message);
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Append a registration row to the configured Google Sheet.
+ * Columns: Registration ID | Name | Email | Phone | Roll Number | Year | Branch | Event | Event Date | Venue | Timestamp
+ */
+export async function appendRegistrationRow(data: {
+  id: string;
+  participantName: string;
+  participantEmail: string;
+  phone: string | null;
+  rollNumber: string | null;
+  year: string | null;
+  branch: string | null;
+  eventName: string;
+  eventDate: string;
+  eventVenue: string;
+  createdAt: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+
+  if (!sheetId) {
+    console.warn("[sheets] GOOGLE_SHEET_ID not set \u2014 skipping registration log.");
+    return { success: false, error: "GOOGLE_SHEET_ID not configured." };
+  }
+
+  try {
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: sheetId,
+      range: "Sheet1!A:D",
+      valueInputOption: "USER_ENTERED",
+      requestBody: {
+        values: [
+          [
+            data.participantName,
+            data.branch ?? "",
+            data.year ?? "",
+            data.phone ?? "",
+          ],
+        ],
+      },
+    });
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("[sheets] Failed to append registration row:", err.message);
     return { success: false, error: err.message };
   }
 }

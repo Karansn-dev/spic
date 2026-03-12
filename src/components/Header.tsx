@@ -11,8 +11,6 @@ const navLinks = [
   { label: "About", path: "/about" },
   { label: "Events", path: "/events" },
   { label: "Team", path: "/team" },
-  { label: "Timeline", path: "/timeline" },
-  { label: "Contact", path: "/contact" },
 ];
 
 const Header = () => {
@@ -23,9 +21,11 @@ const Header = () => {
     <header className="sticky top-0 z-50 border-b border-border/40 bg-background/90 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground font-display font-bold text-xs transition-transform duration-200 group-hover:scale-105">
-            SP
-          </div>
+          <img
+            src="/393231854_702667585072023_7865280417640025906_n.jpg"
+            alt="SPIC Logo"
+            className="h-10 w-10 object-cover rounded-md transition-transform duration-200 group-hover:scale-105"
+          />
           <span className="font-display text-lg font-bold tracking-tight text-foreground">
             SPIC
           </span>
@@ -54,9 +54,6 @@ const Header = () => {
 
         <div className="hidden md:flex items-center gap-2.5">
           <ThemeToggle />
-          <Button asChild size="sm" variant="ghost">
-            <Link to="/dashboard">My Tickets</Link>
-          </Button>
           <Button asChild size="sm" variant="ghost">
             <Link to="/join">Join Us</Link>
           </Button>
@@ -95,9 +92,6 @@ const Header = () => {
                   <span className="text-sm text-muted-foreground">Theme</span>
                   <ThemeToggle />
                 </div>
-                <Button asChild variant="outline" onClick={() => setOpen(false)}>
-                  <Link to="/dashboard">My Tickets</Link>
-                </Button>
                 <Button asChild variant="outline" onClick={() => setOpen(false)}>
                   <Link to="/join">Join Us</Link>
                 </Button>
