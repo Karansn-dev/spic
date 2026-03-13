@@ -10,10 +10,16 @@ let db: Firestore;
 
 export function getDb(): Firestore {
   if (!db) {
-    const keyPath = path.join(__dirname, "firebase-service-account.json");
-    const serviceAccount = JSON.parse(
-      readFileSync(keyPath, "utf-8")
-    ) as ServiceAccount;
+    let serviceAccount: ServiceAccount;
+
+    if (process.env.FIREBASE_CONFIG) {
+      serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG) as ServiceAccount;
+    } else {
+      const keyPath = path.join(__dirname, "firebase-service-account.json");
+      serviceAccount = JSON.parse(
+        readFileSync(keyPath, "utf-8")
+      ) as ServiceAccount;
+    }
 
     initializeApp({ credential: cert(serviceAccount) });
     db = getFirestore();

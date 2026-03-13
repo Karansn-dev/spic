@@ -5,11 +5,18 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const KEY_PATH = path.join(__dirname, "..", "firebase-service-account.json");
 
-// Re-use the same Firebase service account for Google Sheets access
-const auth = new google.auth.GoogleAuth({
-  keyFile: KEY_PATH,
+const authOptions: any = {
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-});
+};
+
+if (process.env.FIREBASE_CONFIG) {
+  authOptions.credentials = JSON.parse(process.env.FIREBASE_CONFIG);
+} else {
+  authOptions.keyFile = KEY_PATH;
+}
+
+// Re-use the same Firebase service account for Google Sheets access
+const auth = new google.auth.GoogleAuth(authOptions);
 
 const sheets = google.sheets({ version: "v4", auth });
 

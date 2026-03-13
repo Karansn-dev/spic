@@ -1,73 +1,120 @@
-# Welcome to your Lovable project
+# SPIC - Official Society Website & Event Portal
 
-## Project info
+Welcome to the official web platform for **SPIC**. Built with modern web technologies, this platform serves as the central hub for the society, showcasing our events, team, and enabling seamless, automated student registrations.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🚀 Features
 
-## How can I edit this code?
+- **Beautiful UI**: Designed with React, Tailwind CSS, and Shadcn UI components.
+- **Automated Event Registrations**: Students can easily register for all flagship events directly from the site.
+- **QR Code Ticketing**: Upon successful registration, the backend automatically generates a unique QR code ticket and emails it directly to the participant.
+- **Real-Time Database**: All registrations are securely stored in Firebase Firestore.
+- **Google Sheets Integration**: A backup record of all registrations is synchronously appended to a designated Google Sheet.
+- **Dark/Light Mode**: Full theme customization built-in.
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🛠️ Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Frontend
+- **Framework**: React 18, Vite
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Components**: Shadcn UI, Radix UI
+- **Routing**: React Router
+- **Form Handling**: React Hook Form + Zod validation
+- **Icons**: Lucide React
 
-Changes made via Lovable will be committed automatically to this repo.
+### Backend
+- **Server**: Express.js with TypeScript (`tsx`)
+- **Database**: Firebase Admin SDK (Firestore)
+- **Email Delivery**: Nodemailer
+- **Integrations**: Google Sheets API
+- **QR Codes**: `qrcode` package
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## ⚙️ Local Setup & Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 1. Prerequisites
+- Node.js (v18 or higher recommended)
+- A Google Cloud Project (for Sheets API)
+- A Firebase Project (for Firestore Database)
 
-Follow these steps:
+### 2. Clone the Repository
+```bash
+git clone <your-repo-url>
+cd spic
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 3. Install Dependencies
+```bash
+npm install
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 4. Configuration Requirements
 
-# Step 3: Install the necessary dependencies.
-npm i
+You need two things to securely connect the backend to Google/Firebase services:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+**A. Firebase Service Account JSON**
+Generate a private key JSON file from your Firebase Project settings and place it in the `server` directory as exactly:
+`server/firebase-service-account.json`
+
+**B. Environment Variables**
+Create a `.env` file in the root directory and configure the following variables:
+
+```env
+# ─── SMTP Configuration for ticket emails ─────────────────────────
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=your-app-password
+
+# ─── API Server Port ──────────────────────────────────────────────
+API_PORT=3001
+
+# ─── Google Sheets (attendance/registration log) ──────────────────
+# 1. Create a Google Sheet → copy the ID from the URL
+# 2. Share the sheet with your Firebase service account email ("client_email" from JSON)
+# 3. Enable Google Sheets API in your Google Cloud Console
+GOOGLE_SHEET_ID=your_google_sheet_id
+```
+
+### 5. Start the Development Server
+
+The application uses `concurrently` to run both the Vite frontend and Express backend simultaneously. 
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+- **Client Application**: Available at `http://localhost:5173` (by default)
+- **API Server**: Available at `http://localhost:3001`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 📂 Project Structure
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```
+├── public/                 # Static assets (images, fonts, etc.)
+├── server/                 # Express backend API
+│   ├── routes/             # API endpoints (registration, verification)
+│   ├── services/           # External logic (email, Sheets API, QR gen)
+│   ├── db.ts               # Firebase initialization
+│   └── index.ts            # Main Express server entry
+├── src/                    # React frontend application
+│   ├── components/         # Reusable UI elements & layouts
+│   ├── lib/                # Utility functions
+│   ├── pages/              # Main view routes
+│   ├── App.tsx             # Application router
+│   └── main.tsx            # React root
+├── .env                    # Environment variables (do not commit)
+└── package.json            # Scripts & dependencies
+```
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## 🛡️ Important Notes
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- Do **not** commit your `.env` file or `firebase-service-account.json` to public version control. They are automatically added to the `.gitignore`.
+- If you encounter a `Permission Denied` error from the Google Sheets API, ensure the Google Sheet is shared with the robotic `client_email` found inside your `firebase-service-account.json` and that the Google Sheets API is turned on in the Cloud console.
