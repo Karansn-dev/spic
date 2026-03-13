@@ -21,18 +21,13 @@ const auth = new google.auth.GoogleAuth(authOptions);
 const sheets = google.sheets({ version: "v4", auth });
 
 /**
- * Append a check-in row to the configured Google Sheet.
- * Columns: Registration ID | Name | Email | Phone | Roll Number | Year | Event | Event Date | Venue | Attendance Timestamp
+ * Find the participant's existing row in the Google Sheet and mark them as Present.
+ * Target Columns: A=Name, B=Branch, C=Year, D=Phone
+ * We update Column E with "Present".
  */
-export async function appendAttendanceRow(data: {
+export async function markAttendanceInSheet(data: {
   participantName: string;
-  participantEmail: string;
   phone: string | null;
-  rollNumber: string | null;
-  year: string | null;
-  eventName: string;
-  eventDate: string;
-  eventVenue: string;
 }): Promise<{ success: boolean; error?: string }> {
   const sheetId = process.env.GOOGLE_SHEET_ID;
 
@@ -42,29 +37,50 @@ export async function appendAttendanceRow(data: {
   }
 
   try {
-    await sheets.spreadsheets.values.append({
+    // 1. Read existing rows to find the participant
+    const response = await sheets.spreadsheets.values.get({
       spreadsheetId: sheetId,
-      range: "Sheet1!A:G",
+      range: "Sheet1!A:D",
+    });
+
+    const rows = response.data.values;
+    if (!rows || rows.length === 0) {
+      return { success: false, error: "Sheet is empty; cannot mark attendance." };
+    }
+
+    let matchIndex = -1;
+    for (let i = 0; i < rows.length; i++) {
+      const rowName = rows[i][0]?.trim().toLowerCase() || "";
+      const rowPhone = rows[i][3]?.trim() || "";
+
+      // Prioritize matching both name and phone if phone exists
+      if (
+        rowName === data.participantName.trim().toLowerCase() &&
+        (data.phone ? rowPhone === data.phone.trim() : true)
+      ) {
+        matchIndex = i;
+        break;
+      }
+    }
+
+    if (matchIndex === -1) {
+      return { success: false, error: "Participant not found in the Google Sheet." };
+    }
+
+    // 2. Update Column E (the 5th column) with 'Present'
+    const updateRange = `Sheet1!E${matchIndex + 1}`;
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: sheetId,
+      range: updateRange,
       valueInputOption: "USER_ENTERED",
       requestBody: {
-        values: [
-          [
-            data.participantName,
-            data.participantEmail,
-            data.phone ?? "",
-            data.rollNumber ?? "",
-            data.year ?? "",
-            data.eventName,
-            data.eventDate,
-            // Removed eventVenue and timestamp as per requirement
-          ],
-        ],
+        values: [["Present"]],
       },
     });
 
     return { success: true };
   } catch (err: any) {
-    console.error("[sheets] Failed to append row:", err.message);
+    console.error("[sheets] Failed to mark attendance:", err.message);
     return { success: false, error: err.message };
   }
 }

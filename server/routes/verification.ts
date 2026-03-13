@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from "express";
 import crypto from "crypto";
 import { getDb, REGISTRATIONS } from "../db.js";
-import { appendAttendanceRow } from "../services/sheets.js";
+import { markAttendanceInSheet } from "../services/sheets.js";
 
 const router = Router();
 
@@ -58,15 +58,9 @@ router.post("/", async (req: Request, res: Response) => {
   });
 
   // Log attendance to Google Sheet (non-blocking)
-  appendAttendanceRow({
+  markAttendanceInSheet({
     participantName: row.participantName,
-    participantEmail: row.participantEmail,
     phone: row.phone ?? null,
-    rollNumber: row.rollNumber ?? null,
-    year: row.year ?? null,
-    eventName: row.eventName,
-    eventDate: row.eventDate,
-    eventVenue: row.eventVenue,
   })
     .then((result) => {
       if (!result.success) {
