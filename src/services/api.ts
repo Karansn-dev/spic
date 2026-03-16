@@ -42,12 +42,17 @@ export interface VerifyResult {
   error?: string;
 }
 
+export interface AdminSessionResult {
+  authenticated: boolean;
+}
+
 async function request<T>(
   url: string,
   options?: RequestInit
 ): Promise<T> {
   const res = await fetch(`${BASE}${url}`, {
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     ...options,
   });
   const data = await res.json();
@@ -84,6 +89,23 @@ export const api = {
     return request<VerifyResult>("/verify", {
       method: "POST",
       body: JSON.stringify(payload),
+    });
+  },
+
+  checkAdminSession() {
+    return request<AdminSessionResult>("/admin/session");
+  },
+
+  adminLogin(pin: string) {
+    return request<AdminSessionResult>("/admin/login", {
+      method: "POST",
+      body: JSON.stringify({ pin }),
+    });
+  },
+
+  adminLogout() {
+    return request<AdminSessionResult>("/admin/logout", {
+      method: "POST",
     });
   },
 };

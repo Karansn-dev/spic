@@ -1,12 +1,13 @@
 import { Router, type Request, type Response } from "express";
 import crypto from "crypto";
 import { getDb, REGISTRATIONS } from "../db.js";
+import { requireAdminAuth } from "../services/adminAuth.js";
 import { markAttendanceInSheet } from "../services/sheets.js";
 
 const router = Router();
 
 // ─── Verify & check-in a participant ────────────────────────────────
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", requireAdminAuth, async (req: Request, res: Response) => {
   const { registrationId, eventId, verificationToken } = req.body;
 
   if (!registrationId || !eventId || !verificationToken) {

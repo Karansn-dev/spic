@@ -17,7 +17,6 @@ import {
 
 type Mode = "camera" | "manual";
 
-const ADMIN_PIN = "spic2026";
 const SCANNER_ELEMENT_ID = "qr-reader";
 
 export default function Scanner() {
@@ -29,10 +28,32 @@ export default function Scanner() {
   const [mode, setMode] = useState<Mode>("camera");
   const [manualInput, setManualInput] = useState("");
   const [scanning, setScanning] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const verifyingRef = useRef(false);
   const mountedRef = useRef(true);
+
+  const handleAdminLogin = async () => {
+    if (!pin.trim()) {
+      setError("Enter the organizer PIN.");
+      return;
+    }
+
+    setAuthLoading(true);
+    setError("");
+
+    try {
+      const res = await api.adminLogin(pin.trim());
+      setAuthenticated(res.authenticated);
+      setPin("");
+    } catch (err: any) {
+      setAuthenticated(false);
+      setError(err.message ?? "Login failed.");
+    } finally {
+      setAuthLoading(false);
+    }
+  };
 
   // ─── Verify scanned data ───────────────────────────────────────
   const verify = async (data: string) => {
@@ -127,6 +148,33 @@ export default function Scanner() {
     };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const restoreSession = async () => {
+      try {
+        const res = await api.checkAdminSession();
+        if (!cancelled) {
+          setAuthenticated(res.authenticated);
+        }
+      } catch {
+        if (!cancelled) {
+          setAuthenticated(false);
+        }
+      } finally {
+        if (!cancelled) {
+          setAuthLoading(false);
+        }
+      }
+    };
+
+    restoreSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const handleManualVerify = () => {
     if (!manualInput.trim()) return;
     verify(manualInput.trim());
@@ -159,14 +207,10 @@ export default function Scanner() {
               placeholder="Enter PIN"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
+              disabled={authLoading}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  if (pin === ADMIN_PIN) {
-                    setAuthenticated(true);
-                    setError("");
-                  } else {
-                    setError("Incorrect PIN.");
-                  }
+                  void handleAdminLogin();
                 }
               }}
             />
@@ -175,15 +219,12 @@ export default function Scanner() {
             )}
             <Button
               className="w-full mt-3"
-              onClick={() => {
-                if (pin === ADMIN_PIN) {
-                  setAuthenticated(true);
-                  setError("");
-                } else {
-                  setError("Incorrect PIN.");
-                }
-              }}
+              onClick={() => void handleAdminLogin()}
+              disabled={authLoading}
             >
+              {authLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : null}
               Access Scanner
             </Button>
           </div>

@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
+import adminRouter from "./routes/admin.js";
 import registrationRouter from "./routes/registration.js";
 import verificationRouter from "./routes/verification.js";
 
@@ -13,10 +14,11 @@ const PORT = Number(process.env.PORT || process.env.API_PORT || 3001);
 
 const app = express();
 
-app.use(cors({ origin: true }));
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: "2mb" }));
 
 // ─── API routes ──────────────────────────────────────────────────────
+app.use("/api/admin", adminRouter);
 app.use("/api/registrations", registrationRouter);
 app.use("/api/verify", verificationRouter);
 
